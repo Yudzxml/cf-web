@@ -1,5 +1,5 @@
 const https = require('https');
-const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
+const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_TOKEN;
 
 function fetchZones() {
   return new Promise((resolve, reject) => {
