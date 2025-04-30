@@ -1,0 +1,83 @@
+/* Gaya Global */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f4f7fb;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.guide-container {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  color: #4f46e5;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+header p {
+  text-align: center;
+  font-size: 1.125rem;
+  color: #6b7280;
+}
+
+section {
+  margin-top: 2rem;
+}
+
+section h2 {
+  font-size: 1.75rem;
+  color: #4f46e5;
+  margin-bottom: 1rem;
+}
+
+.feature {
+  background-color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.feature h3 {
+  color: #2563eb;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+footer {
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+footer p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .guide-container {
+    padding: 1.5rem;
+  }
+}
