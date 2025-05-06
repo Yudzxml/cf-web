@@ -38,17 +38,18 @@ module.exports = async (req, res) => {
   req.on('end', async () => {
     try {
       const { domain } = JSON.parse(body);
-      if (!domain) return res.status(400).json({ message: 'Missing domain' });
+      if (!domain) return res.status(400).json({ message: 'Missing domain (zone)' });
 
       const zones = await requestCloudflare(`/client/v4/zones`, 'GET');
       if (!zones.success) return res.status(500).json({ message: 'Failed to fetch zones' });
 
-      const matchedZone = zones.result.find(z => domain.endsWith(z.name));
+      const matchedZone = zones.result.find(z => z.name === domain);
       if (!matchedZone) return res.status(404).json({ message: 'Zone not found for domain' });
 
       const zoneId = matchedZone.id;
 
-      const records = await requestCloudflare(`/client/v4/zones/${zoneId}/dns_records?name=${domain}`, 'GET');
+      // Ambil semua record tanpa filter nama
+      const records = await requestCloudflare(`/client/v4/zones/${zoneId}/dns_records`, 'GET');
       if (!records.success) return res.status(500).json({ message: 'Failed to fetch records' });
 
       return res.status(200).json({ result: records.result });
