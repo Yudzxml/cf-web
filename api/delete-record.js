@@ -32,11 +32,6 @@ function requestCloudflare(path, method, data = null) {
   });
 }
 
-function getRootDomain(domain) {
-  const parts = domain.split('.');
-  return parts.slice(-2).join('.');
-}
-
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method Not Allowed' });
 
@@ -47,20 +42,26 @@ module.exports = async (req, res) => {
       const { domain, type } = JSON.parse(body);
       if (!domain || !type) return res.status(400).json({ message: 'domain and type are required' });
 
-      const rootDomain = getRootDomain(domain);
-      const zones = await requestCloudflare(`/client/v4/zones?name=${rootDomain}`, 'GET');
-      if (!zones.success || !zones.result.length)
-        return res.status(404).json({ message: 'Zone not found' });
+      const zones = await requestCloudflare(`/client/v4/zones`, 'GET');
+      if (!zones.success) return res.status(500).json({ message: 'Failed to fetch zones' });
 
-      const zoneId = zones.result[0].id;
+      const matchedZone = zones.result.find(z => domain.endsWith(z.name));
+      if (!matchedZone) return res.status(404).json({ message: 'Zone not found for domain' });
 
-      const records = await requestCloudflare(`/client/v4/zones/${zoneId}/dns_records?name=${domain}&type=${type}`, 'GET');
+      const zoneId = matchedZone.id;
+
+      const records = await requestCloudflare(
+        `/client/v4/zones/${zoneId}/dns_records?name=${domain}&type=${type}`, 'GET'
+      );
       if (!records.success || records.result.length === 0)
         return res.status(404).json({ message: 'No matching record found' });
 
       const recordId = records.result[0].id;
 
-      const deleted = await requestCloudflare(`/client/v4/zones/${zoneId}/dns_records/${recordId}`, 'DELETE');
+      const deleted = await requestCloudflare(
+        `/client/v4/zones/${zoneId}/dns_records/${recordId}`, 'DELETE'
+      );
+
       if (deleted.success) {
         return res.status(200).json({ message: `DNS record ${type} for ${domain} deleted.` });
       } else {

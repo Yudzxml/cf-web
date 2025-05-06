@@ -1,5 +1,4 @@
 const https = require('https');
-
 const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_TOKEN;
 
 function requestCloudflare(path, method) {
@@ -31,11 +30,6 @@ function requestCloudflare(path, method) {
   });
 }
 
-function getRootDomain(domain) {
-  const parts = domain.split('.');
-  return parts.slice(-2).join('.');
-}
-
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method Not Allowed' });
 
@@ -44,17 +38,18 @@ module.exports = async (req, res) => {
   req.on('end', async () => {
     try {
       const { domain } = JSON.parse(body);
-      const rootDomain = getRootDomain(domain);
+      if (!domain) return res.status(400).json({ message: 'Missing domain' });
 
-      const zones = await requestCloudflare(`/client/v4/zones?name=${rootDomain}`, 'GET');
-      if (!zones.success || zones.result.length === 0)
-        return res.status(404).json({ message: 'Zone not found' });
+      const zones = await requestCloudflare(`/client/v4/zones`, 'GET');
+      if (!zones.success) return res.status(500).json({ message: 'Failed to fetch zones' });
 
-      const zoneId = zones.result[0].id;
+      const matchedZone = zones.result.find(z => domain.endsWith(z.name));
+      if (!matchedZone) return res.status(404).json({ message: 'Zone not found for domain' });
+
+      const zoneId = matchedZone.id;
+
       const records = await requestCloudflare(`/client/v4/zones/${zoneId}/dns_records?name=${domain}`, 'GET');
-
-      if (!records.success || records.result.length === 0)
-        return res.status(404).json({ message: 'No records found' });
+      if (!records.success) return res.status(500).json({ message: 'Failed to fetch records' });
 
       return res.status(200).json({ result: records.result });
     } catch (err) {
