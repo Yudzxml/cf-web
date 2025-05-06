@@ -11,6 +11,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   } catch (err) {
     zoneSelector.innerHTML = '<option disabled>Error loading zones</option>';
   }
+
+  fetchZones(); // load daftar domain
 });
 
 // Combine selected zone and subdomain into full domain
@@ -49,10 +51,10 @@ document.getElementById('dnsForm').addEventListener('submit', async (e) => {
   document.getElementById('result').classList.add('text-indigo-600');
 });
 
-// Fungsi untuk menampilkan DNS records
+// Menampilkan DNS records berdasarkan domain yang dipilih
 async function listRecords() {
-  const domain = document.getElementById('searchDomain').value;
-  if (!domain) return alert('Please enter a domain');
+  const domain = document.getElementById('zoneSelector').value;
+  if (!domain) return alert('Pilih domain terlebih dahulu.');
 
   const res = await fetch('/api/list-records', {
     method: 'POST',
@@ -83,7 +85,7 @@ async function listRecords() {
   });
 }
 
-// Fungsi untuk menghapus DNS record
+// Menghapus DNS record berdasarkan tombol
 async function deleteRecord(domain, type) {
   const confirmDelete = confirm(`Are you sure you want to delete ${type} record for ${domain}?`);
   if (!confirmDelete) return;
@@ -99,12 +101,9 @@ async function deleteRecord(domain, type) {
   listRecords(); // Refresh the list
 }
 
-// Load domain zones on page load
-window.addEventListener('DOMContentLoaded', fetchZones);
-
-// Ambil semua domain dari API
+// Menampilkan semua domain dari API
 async function fetchZones() {
-  const res = await fetch('/api/list-zones'); // Buat endpoint list-zones.js seperti tadi
+  const res = await fetch('/api/list-zones');
   const data = await res.json();
   const table = document.getElementById('domainTable');
   table.innerHTML = '';
@@ -127,7 +126,7 @@ async function fetchZones() {
   });
 }
 
-// Tampilkan semua record untuk domain
+// Menampilkan semua record berdasarkan domain
 async function viewRecords(domain) {
   const res = await fetch('/api/list-records', {
     method: 'POST',
@@ -157,4 +156,26 @@ async function viewRecords(domain) {
     `;
     table.appendChild(row);
   });
+}
+
+// Fungsi hapus manual berdasarkan input domain dan tipe
+async function manualDeleteRecord() {
+  const domain = document.getElementById('deleteDomain').value.trim();
+  const type = document.getElementById('deleteType').value;
+
+  if (!domain || !type) {
+    return alert('Isi domain dan tipe record yang ingin dihapus.');
+  }
+
+  const confirmDelete = confirm(`Yakin hapus record ${type} untuk ${domain}?`);
+  if (!confirmDelete) return;
+
+  const res = await fetch('/api/delete-record', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ domain, type }),
+  });
+
+  const result = await res.json();
+  alert(result.message);
 }

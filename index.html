@@ -11,19 +11,21 @@
     <div class="container bg-white rounded-lg shadow-2xl w-full max-w-3xl p-8 flex flex-col space-y-6">
       <h1 class="text-3xl font-extrabold text-indigo-700 text-center">Cloudflare DNS Manager</h1>
       <p class="text-center text-gray-600 text-sm">Manage your DNS records seamlessly with ease.</p>
-    <!-- Domain Picker Section -->
-<div class="space-y-4">
-  <label for="zoneSelector" class="block text-sm font-medium text-gray-700">Pilih Domain (Zone):</label>
-  <select id="zoneSelector" class="input-field">
-    <option disabled selected value="">Loading...</option>
-  </select>
 
-  <input type="text" id="subdomainInput" class="input-field" placeholder="Subdomain (e.g. www, blog)" />
-</div>
+      <!-- Domain Picker Section -->
+      <div class="space-y-4">
+        <label for="zoneSelector" class="block text-sm font-medium text-gray-700">Pilih Domain (Zone):</label>
+        <select id="zoneSelector" class="input-field">
+          <option disabled selected value="">Loading...</option>
+        </select>
+        <input type="text" id="subdomainInput" class="input-field" placeholder="Subdomain (e.g. www, blog)" />
+      </div>
+
       <!-- DNS Record Form -->
       <form id="dnsForm" class="space-y-4">
+        <input type="hidden" id="domain" />
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input type="hidden" id="domain" class="input-field" placeholder="Domain (e.g. sub.example.com)" required />
           <select id="type" class="input-field">
             <option value="A">A</option>
             <option value="AAAA">AAAA</option>
@@ -32,78 +34,60 @@
             <option value="TXT">TXT</option>
             <option value="NS">NS</option>
           </select>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input type="text" id="content" class="input-field" placeholder="Content" required />
-          <input type="number" id="ttl" class="input-field" placeholder="TTL (e.g. 3600)" value="3600" />
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input type="number" id="priority" class="input-field" placeholder="Priority (For MX records)" />
-          <div class="flex items-center gap-2">
-            <input type="checkbox" id="proxied" class="text-indigo-600" />
-            <label for="proxied" class="text-sm text-gray-700">Proxied</label>
-          </div>
+          <input type="number" id="ttl" class="input-field" placeholder="TTL (e.g. 3600)" value="3600" />
+          <input type="number" id="priority" class="input-field" placeholder="Priority (MX only)" />
         </div>
 
-        <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition duration-300 transform hover:scale-105 font-semibold" type="submit">Add DNS Record</button>
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="proxied" class="text-indigo-600" />
+          <label for="proxied" class="text-sm text-gray-700">PROXY</label>
+        </div>
+
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold">
+          Add DNS Record
+        </button>
       </form>
 
-      <!-- DNS Record List Section -->
+      <!-- View Records -->
       <div class="mt-10">
-        <input type="text" id="searchDomain" placeholder="Enter domain to view records" class="w-full border border-indigo-300 rounded-lg px-3 py-2 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-        <button onclick="listRecords()" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition duration-300">View DNS Records</button>
+        <button onclick="listRecords()" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold">
+          View DNS Records
+        </button>
       </div>
 
-      <!-- Response and Records -->
       <div id="result" class="mt-4 text-center text-sm font-medium"></div>
       <div id="records" class="space-y-4 mt-4"></div>
-<!-- Domain List Table -->
-<div class="mt-10">
-  <h2 class="text-xl font-bold text-indigo-700 mb-2">Daftar Domain Tersedia</h2>
-  <table class="w-full border text-sm text-left mb-6">
-    <thead class="bg-indigo-100">
-      <tr>
-        <th class="p-2 border">Domain</th>
-        <th class="p-2 border">Status</th>
-        <th class="p-2 border">Aksi</th>
-      </tr>
-    </thead>
-    <tbody id="domainTable" class="bg-white">
-      <!-- Diisi via JS -->
-    </tbody>
-  </table>
-</div>
 
-<!-- Subdomain Records Table -->
-<div class="mt-6">
-  <h2 class="text-xl font-bold text-indigo-700 mb-2">DNS Records (Subdomain)</h2>
-  <table class="w-full border text-sm text-left">
-    <thead class="bg-indigo-100">
-      <tr>
-        <th class="p-2 border">Tipe</th>
-        <th class="p-2 border">Nama</th>
-        <th class="p-2 border">Konten</th>
-        <th class="p-2 border">TTL</th>
-        <th class="p-2 border">Aksi</th>
-      </tr>
-    </thead>
-    <tbody id="recordTable" class="bg-white">
-      <!-- Diisi via JS -->
-    </tbody>
-  </table>
-</div>
+      <!-- Delete DNS Record Section -->
+      <div class="mt-10 space-y-2">
+        <h2 class="text-xl font-bold text-red-600">Hapus Dns Record</h2>
+        <input type="text" id="deleteDomain" placeholder="Subdomain (contoh: www.example.com)" class="input-field" />
+        <select id="deleteType" class="input-field">
+          <option value="A">A</option>
+          <option value="AAAA">AAAA</option>
+          <option value="CNAME">CNAME</option>
+          <option value="MX">MX</option>
+          <option value="TXT">TXT</option>
+          <option value="NS">NS</option>
+        </select>
+        <button onclick="manualDeleteRecord()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold">
+          Hapus Record
+        </button>
+        <div id="deleteResult" class="text-sm mt-2"></div>
+      </div>
+
       <!-- Footer Section -->
-<footer class="mt-10 text-center text-gray-500 text-sm">
-  <p>&copy; 2025 Yudzxml DNS Manager.<br>All Rights Reserved.</p>
-  <p><a href="/user-guide.html" class="text-indigo-600 hover:text-indigo-800">Panduan Penggunaan</a></p> <!-- Link ke Panduan Penggunaan -->
-</footer>
-
+      <footer class="mt-10 text-center text-gray-500 text-sm">
+        <p>&copy; 2025 Yudzxml DNS Manager.</p>
+        <p><a href="/user-guide.html" class="text-indigo-600 hover:text-indigo-800">Panduan Penggunaan</a></p>
+      </footer>
     </div>
   </div>
-
-  <!-- Script File -->
   <script src="/script.js"></script>
 </body>
 </html>
