@@ -16,15 +16,12 @@
       --color-bg: #f9fafb;
       --color-bg-dark: #1f1f2e;
       --color-border: #e2e8f0;
-      --color-border-dark: #374151;
       --color-text: #374151;
       --color-text-muted: #6b7280;
-      --color-text-dark: #e5e7eb;
       --color-error: #ef4444;
-      --color-error-dark: #dc2626;
       --border-radius: 0.75rem;
-      --transition-fast: 0.2s ease;
       --transition: 0.3s ease;
+      --transition-fast: 0.2s ease;
     }
 
     /* Reset */
@@ -46,157 +43,112 @@
       max-width: 700px;
       background: var(--color-bg);
       border-radius: 1rem;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
       padding: 2rem;
       transition: transform var(--transition), box-shadow var(--transition);
     }
     .container:hover {
       transform: translateY(-5px);
-      box-shadow: 0 15px 60px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 15px 60px rgba(0,0,0,0.15);
     }
 
     /* Typography */
     h1 {
-      font-size: 2.25rem;
+      font-size: 2.25rem; font-weight: 900;
       color: var(--color-primary);
-      font-weight: 900;
-      text-align: center;
-      margin-bottom: 1rem;
+      text-align: center; margin-bottom: 1rem;
       animation: fadeIn 1s ease-in-out;
     }
     h2 {
-      font-size: 1.5rem;
-      text-align: center;
-      margin-bottom: 1rem;
-      color: var(--color-text);
+      font-size: 1.5rem; text-align: center; margin-bottom: 1rem;
     }
     p.subtitle {
-      font-size: 1rem;
-      text-align: center;
-      margin-bottom: 2rem;
+      font-size: 1rem; text-align: center; margin-bottom: 2rem;
       color: var(--color-text-muted);
       animation: fadeIn 1s ease-in-out 0.5s;
     }
 
     /* Inputs & Buttons */
-    .input-field,
-    select,
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 1rem;
-      font-size: 1rem;
-      background: var(--color-bg);
-      border: 2px solid var(--color-border);
+    .input-field, select, input[type="text"], input[type="number"] {
+      width: 100%; padding: 1rem; font-size:1rem;
+      background: var(--color-bg); border:2px solid var(--color-border);
       border-radius: var(--border-radius);
       transition: border-color var(--transition), box-shadow var(--transition);
-      margin-bottom: 1rem;
+      margin-bottom:1rem;
     }
     .input-field:focus {
-      outline: none;
-      border-color: var(--color-primary);
-      box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
-      background: var(--color-bg);
+      outline:none; border-color: var(--color-primary);
+      box-shadow: 0 0 8px rgba(79,70,229,0.5);
     }
     button {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      padding: 1rem;
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: #fff;
-      background: var(--color-primary);
-      border: none;
+      position: relative; display:inline-flex;
+      align-items:center; justify-content:center;
+      width:100%; padding:1rem; font-size:1.125rem;
+      font-weight:600; color:#fff;
+      background: var(--color-primary); border:none;
       border-radius: var(--border-radius);
-      cursor: pointer;
+      cursor:pointer;
       transition: background var(--transition-fast), transform var(--transition-fast);
-      margin-bottom: 1rem;
+      margin-bottom:1rem;
     }
     button:hover { background: var(--color-primary-dark); transform: scale(1.03); }
     button:active { transform: translateY(1px); }
     button.loading::after {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 30px; height: 30px;
-      margin: -15px 0 0 -15px;
-      border: 4px solid #fff;
-      border-top-color: var(--color-primary);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+      content: ''; position:absolute; top:50%; left:50%;
+      width:30px; height:30px; margin:-15px 0 0 -15px;
+      border:4px solid #fff; border-top-color: var(--color-primary);
+      border-radius:50%; animation: spin 1s linear infinite;
     }
 
     /* Tables */
-    .custom-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 2rem;
+    .custom-table { width:100%; border-collapse: collapse; }
+    .custom-table th, .custom-table td {
+      padding:0.75rem 1rem; border:1px solid var(--color-border);
+      font-size:0.95rem;
     }
-    .custom-table th,
-    .custom-table td {
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--color-border);
-      font-size: 0.95rem;
-    }
-    .custom-table th {
-      background: var(--color-bg);
-      font-weight: 700;
-    }
+    .custom-table th { background: var(--color-bg); font-weight:700; }
     .custom-table tr:nth-child(even) { background: var(--color-bg); }
     .custom-table tr:hover { background: #eef2ff; }
 
-    /* Wrapper untuk Daftar Record */
+    /* Wrapper for Records + Pagination */
     .table-wrapper {
-      max-height: 350px;        /* Batasi tinggi maksimal */
-      overflow-y: auto;         /* Scroll vertikal jika perlu */
-      margin-bottom: 2rem;
+      max-height: 300px; overflow-y: auto; margin-bottom:1rem;
     }
-    .table-wrapper .custom-table {
-      width: 100%;
-      table-layout: fixed;      /* Supaya kolom merata */
-      word-wrap: break-word;
+    .table-wrapper .custom-table { table-layout: fixed; word-wrap: break-word; }
+    .pagination-controls {
+      display: flex; justify-content: center; gap:0.5rem; margin-bottom:2rem;
     }
-    .table-wrapper::-webkit-scrollbar {
-      width: 6px;
+    .pagination-controls button {
+      padding:0.5rem 1rem; border:1px solid var(--color-border);
+      background: var(--color-bg); cursor:pointer; border-radius: var(--border-radius);
     }
-    .table-wrapper::-webkit-scrollbar-thumb {
-      background: var(--color-primary);
-      border-radius: 3px;
-    }
+    .pagination-controls button:disabled { opacity:0.5; cursor:default; }
 
     /* Proxied */
     .proxied-container {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;
     }
     .proxied-container i { color: var(--color-primary); }
 
     /* Footer */
     footer {
-      text-align: center;
-      font-size: 0.875rem;
-      color: var(--color-text-muted);
-      margin-top: 2rem;
+      text-align:center; font-size:0.875rem; color: var(--color-text-muted);
+      margin-top:2rem;
     }
 
-    /* Scrollbar global */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 10px; }
+    /* Scrollbars */
+    ::-webkit-scrollbar { width:8px; }
+    ::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius:10px; }
     ::-webkit-scrollbar-track { background: var(--color-border); }
 
     /* Animations */
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+    @keyframes spin { to{transform:rotate(360deg);} }
 
     /* Responsive */
-    @media (max-width: 480px) {
-      .container { padding: 1rem; }
-      h1 { font-size: 1.75rem; }
+    @media (max-width:480px) {
+      .container { padding:1rem; }
+      h1 { font-size:1.75rem; }
     }
   </style>
 </head>
@@ -220,7 +172,7 @@
     <section>
       <form id="dnsForm">
         <input type="hidden" id="domain" />
-        <div class="grid grid-cols-2 gap-4">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
           <select id="type" class="input-field">
             <option value="A">A</option>
             <option value="AAAA">AAAA</option>
@@ -231,7 +183,7 @@
           </select>
           <input type="text" id="content" class="input-field" placeholder="Content" required />
         </div>
-        <div class="grid grid-cols-2 gap-4">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
           <input type="number" id="ttl" class="input-field" placeholder="TTL e.g. 3600" value="3600" />
           <input type="number" id="priority" class="input-field" placeholder="Priority (MX)" />
         </div>
@@ -270,15 +222,20 @@
           </tbody>
         </table>
       </div>
+      <div id="paginationControls" class="pagination-controls"></div>
     </section>
 
     <footer>
-      &copy; 2025 Yudzxml DNS Manager. &bull; <a href="/user-guide.html" style="color: var(--color-primary); text-decoration: none;">📘 Panduan Penggunaan</a>
+      &copy; 2025 Yudzxml DNS Manager. &bull;
+      <a href="/user-guide.html" style="color: var(--color-primary); text-decoration:none;">📘 Panduan Penggunaan</a>
     </footer>
   </div>
 
   <script>
     const API_BASE = 'https://cf-web-phi.vercel.app/api';
+    const pageSize = 10;
+    let currentRecords = [];
+    let currentPage = 1;
 
     window.addEventListener('DOMContentLoaded', () => {
       loadZones();
@@ -314,21 +271,27 @@
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
       btn.classList.add('loading'); btn.disabled = true;
-      const body = { domain: document.getElementById('domain').value,
-                     type: document.getElementById('type').value,
-                     content: document.getElementById('content').value,
-                     ttl: parseInt(document.getElementById('ttl').value,10),
-                     proxied: document.getElementById('proxied').checked };
-      const pr = body.type === 'MX' ? parseInt(document.getElementById('priority').value,10) : null;
-      if (body.type === 'MX' && pr) body.priority = pr;
+      const body = {
+        domain: document.getElementById('domain').value,
+        type: document.getElementById('type').value,
+        content: document.getElementById('content').value,
+        ttl: parseInt(document.getElementById('ttl').value,10),
+        proxied: document.getElementById('proxied').checked
+      };
+      if (body.type === 'MX') {
+        const pr = parseInt(document.getElementById('priority').value,10);
+        if (pr) body.priority = pr;
+      }
       try {
         const res = await fetch(`${API_BASE}/point-domain`, {
-          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(body)
         });
         const r = await res.json();
         showResult(r.message, false);
         viewRecords(body.domain);
-      } catch (err) {
+      } catch {
         showResult('Error submitting form', true);
       } finally {
         btn.classList.remove('loading'); btn.disabled = false;
@@ -342,7 +305,8 @@
     }
 
     function fetchZoneTable(zones) {
-      const table = document.getElementById('domainTable'); table.innerHTML = '';
+      const table = document.getElementById('domainTable');
+      table.innerHTML = '';
       if (!zones.length) {
         table.innerHTML = '<tr><td colspan="3" class="text-center">Tidak ada domain</td></tr>';
         return;
@@ -352,38 +316,78 @@
         tr.innerHTML = `
           <td class="p-2 border">${z.name}</td>
           <td class="p-2 border">${z.status}</td>
-          <td class="p-2 border"><button onclick="viewRecords('${z.name}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs">Lihat</button></td>`;
+          <td class="p-2 border">
+            <button onclick="viewRecords('${z.name}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs">
+              Lihat
+            </button>
+          </td>`;
         table.appendChild(tr);
       });
     }
 
     async function viewRecords(domain) {
       const res = await fetch(`${API_BASE}/list-records`, {
-        method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({domain})
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({domain})
       });
       const { result } = await res.json();
-      const table = document.getElementById('recordTable'); table.innerHTML = '';
-      if (!result || !result.length) {
+      currentRecords = result || [];
+      currentPage = 1;
+      renderPage();
+      renderPagination();
+    }
+
+    function renderPage() {
+      const start = (currentPage-1)*pageSize;
+      const pageData = currentRecords.slice(start, start+pageSize);
+      const table = document.getElementById('recordTable');
+      table.innerHTML = '';
+      if (!pageData.length) {
         table.innerHTML = '<tr><td colspan="5" class="text-center">Tidak ada record ditemukan</td></tr>';
         return;
       }
-      result.forEach(rec => {
+      pageData.forEach(rec => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="p-2 border">${rec.type}</td>
           <td class="p-2 border">${rec.name}</td>
           <td class="p-2 border">${rec.content}</td>
           <td class="p-2 border">${rec.ttl}</td>
-          <td class="p-2 border"><button onclick="deleteRecord('${rec.name}','${rec.type}')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs">Hapus</button></td>`;
+          <td class="p-2 border">
+            <button onclick="deleteRecord('${rec.name}','${rec.type}')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs">
+              Hapus
+            </button>
+          </td>`;
         table.appendChild(tr);
       });
+    }
+
+    function renderPagination() {
+      const totalPages = Math.ceil(currentRecords.length/pageSize);
+      const container = document.getElementById('paginationControls');
+      container.innerHTML = '';
+      if (totalPages <= 1) return;
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = '‹ Prev';
+      prevBtn.disabled = currentPage===1;
+      prevBtn.onclick = () => { currentPage--; renderPage(); renderPagination(); };
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = 'Next ›';
+      nextBtn.disabled = currentPage===totalPages;
+      nextBtn.onclick = () => { currentPage++; renderPage(); renderPagination(); };
+      container.appendChild(prevBtn);
+      container.appendChild(document.createTextNode(` Halaman ${currentPage} dari ${totalPages} `));
+      container.appendChild(nextBtn);
     }
 
     async function deleteRecord(domain, type) {
       if (!confirm(`Yakin hapus ${type} record untuk ${domain}?`)) return;
       try {
         const res = await fetch(`${API_BASE}/delete-record`, {
-          method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ domain, type })
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({domain, type})
         });
         const r = await res.json();
         alert(r.message);
