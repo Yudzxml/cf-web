@@ -148,6 +148,25 @@
     .custom-table tr:nth-child(even) { background: var(--color-bg); }
     .custom-table tr:hover { background: #eef2ff; }
 
+    /* Wrapper untuk Daftar Record */
+    .table-wrapper {
+      max-height: 350px;        /* Batasi tinggi maksimal */
+      overflow-y: auto;         /* Scroll vertikal jika perlu */
+      margin-bottom: 2rem;
+    }
+    .table-wrapper .custom-table {
+      width: 100%;
+      table-layout: fixed;      /* Supaya kolom merata */
+      word-wrap: break-word;
+    }
+    .table-wrapper::-webkit-scrollbar {
+      width: 6px;
+    }
+    .table-wrapper::-webkit-scrollbar-thumb {
+      background: var(--color-primary);
+      border-radius: 3px;
+    }
+
     /* Proxied */
     .proxied-container {
       display: flex;
@@ -165,7 +184,7 @@
       margin-top: 2rem;
     }
 
-    /* Scrollbar */
+    /* Scrollbar global */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 10px; }
     ::-webkit-scrollbar-track { background: var(--color-border); }
@@ -241,14 +260,16 @@
     <!-- Daftar Records -->
     <section>
       <h2>📄 Daftar Record</h2>
-      <table class="custom-table">
-        <thead>
-          <tr><th>Tipe</th><th>Nama</th><th>Konten</th><th>TTL</th><th>Aksi</th></tr>
-        </thead>
-        <tbody id="recordTable">
-          <tr><td colspan="5" class="text-center">Pilih domain untuk melihat record.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-wrapper">
+        <table class="custom-table">
+          <thead>
+            <tr><th>Tipe</th><th>Nama</th><th>Konten</th><th>TTL</th><th>Aksi</th></tr>
+          </thead>
+          <tbody id="recordTable">
+            <tr><td colspan="5" class="text-center">Pilih domain untuk melihat record.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <footer>
