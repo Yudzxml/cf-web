@@ -1,31 +1,207 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cloudflare DNS Manager</title>
-  <link href="/styles.css" rel="stylesheet" />
+  <!-- Font & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/c9f47c1aee.js" crossorigin="anonymous"></script>
+  <style>
+    /* Variables */
+    :root {
+      --color-primary: #4f46e5;
+      --color-primary-dark: #3b3fd7;
+      --color-secondary: #98aaff;
+      --color-bg: #f9fafb;
+      --color-bg-dark: #1f1f2e;
+      --color-border: #e2e8f0;
+      --color-border-dark: #374151;
+      --color-text: #374151;
+      --color-text-muted: #6b7280;
+      --color-text-dark: #e5e7eb;
+      --color-error: #ef4444;
+      --color-error-dark: #dc2626;
+      --border-radius: 0.75rem;
+      --transition-fast: 0.2s ease;
+      --transition: 0.3s ease;
+    }
+
+    /* Reset */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: var(--color-text);
+    }
+
+    /* Card */
+    .container {
+      width: 100%;
+      max-width: 700px;
+      background: var(--color-bg);
+      border-radius: 1rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 2.25rem;
+      color: var(--color-primary);
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 1rem;
+      animation: fadeIn 1s ease-in-out;
+    }
+    h2 {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+    p.subtitle {
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--color-text-muted);
+      animation: fadeIn 1s ease-in-out 0.5s;
+    }
+
+    /* Inputs & Buttons */
+    .input-field,
+    select,
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      background: var(--color-bg);
+      border: 2px solid var(--color-border);
+      border-radius: var(--border-radius);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      margin-bottom: 1rem;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
+      background: var(--color-bg);
+    }
+    button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--color-primary);
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+      margin-bottom: 1rem;
+    }
+    button:hover { background: var(--color-primary-dark); transform: scale(1.03); }
+    button:active { transform: translateY(1px); }
+    button.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 30px; height: 30px;
+      margin: -15px 0 0 -15px;
+      border: 4px solid #fff;
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Tables */
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+    .custom-table th,
+    .custom-table td {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--color-border);
+      font-size: 0.95rem;
+    }
+    .custom-table th {
+      background: var(--color-bg);
+      font-weight: 700;
+    }
+    .custom-table tr:nth-child(even) { background: var(--color-bg); }
+    .custom-table tr:hover { background: #eef2ff; }
+
+    /* Proxied */
+    .proxied-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .proxied-container i { color: var(--color-primary); }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-top: 2rem;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 10px; }
+    ::-webkit-scrollbar-track { background: var(--color-border); }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container { padding: 1rem; }
+      h1 { font-size: 1.75rem; }
+    }
+  </style>
 </head>
 <body>
-  <div class="bg-gradient-to-br from-indigo-50 to-indigo-200 min-h-screen flex justify-center items-center py-10">
-    <div class="container bg-white rounded-lg shadow-2xl w-full max-w-3xl p-8 flex flex-col space-y-6">
-      <h1 class="text-3xl font-extrabold text-indigo-700 text-center">Cloudflare DNS Manager</h1>
-      <p class="text-center text-gray-600 text-sm">Manage your DNS records seamlessly with ease.</p>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-cloud"></i> Cloudflare DNS Manager</h1>
+      <p class="subtitle">Manage your DNS records seamlessly with ease.</p>
+    </header>
 
-      <!-- Domain Picker Section -->
-      <div class="space-y-4">
-        <label for="zoneSelector" class="block text-sm font-medium text-gray-700">Pilih Domain (Zone):</label>
-        <select id="zoneSelector" class="input-field">
-          <option disabled selected value="">Loading...</option>
-        </select>
-        <input type="text" id="subdomainInput" class="input-field" placeholder="Subdomain (e.g. www, blog)" />
-      </div>
+    <!-- Pilih Domain & Subdomain -->
+    <section>
+      <label for="zoneSelector">🌐 Pilih Domain (Zone):</label>
+      <select id="zoneSelector" class="input-field">
+        <option disabled selected>Loading...</option>
+      </select>
+      <input type="text" id="subdomainInput" class="input-field" placeholder="Subdomain (e.g. www)" />
+    </section>
 
-      <!-- DNS Record Form -->
-      <form id="dnsForm" class="space-y-4">
+    <!-- Form DNS -->
+    <section>
+      <form id="dnsForm">
         <input type="hidden" id="domain" />
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-2 gap-4">
           <select id="type" class="input-field">
             <option value="A">A</option>
             <option value="AAAA">AAAA</option>
@@ -34,42 +210,167 @@
             <option value="TXT">TXT</option>
             <option value="NS">NS</option>
           </select>
-
           <input type="text" id="content" class="input-field" placeholder="Content" required />
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input type="number" id="ttl" class="input-field" placeholder="TTL (e.g. 3600)" value="3600" />
-          <input type="number" id="priority" class="input-field" placeholder="Priority (MX only)" />
+        <div class="grid grid-cols-2 gap-4">
+          <input type="number" id="ttl" class="input-field" placeholder="TTL e.g. 3600" value="3600" />
+          <input type="number" id="priority" class="input-field" placeholder="Priority (MX)" />
         </div>
-
-        <div class="flex items-center gap-2">
-          <input type="checkbox" id="proxied" class="text-indigo-600" />
-          <label for="proxied" class="text-sm text-gray-700">PROXY</label>
+        <div class="proxied-container">
+          <i class="fas fa-shield-alt"></i>
+          <label><input type="checkbox" id="proxied" /> PROXY</label>
         </div>
-
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold">
-          Add DNS Record
-        </button>
+        <button type="submit" id="submitBtn"><i class="fas fa-plus-circle"></i> Add DNS Record</button>
+        <p id="result"></p>
       </form>
+    </section>
 
-      <!-- View Records -->
-      <div class="mt-10">
-        <button onclick="listRecords()" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold">
-          View DNS Records
-        </button>
-      </div>
+    <!-- Daftar Zones -->
+    <section>
+      <h2>📋 Daftar Domain (Zones)</h2>
+      <table class="custom-table">
+        <thead>
+          <tr><th>Domain</th><th>Status</th><th>Aksi</th></tr>
+        </thead>
+        <tbody id="domainTable">
+          <tr><td colspan="3" class="text-center">Memuat...</td></tr>
+        </tbody>
+      </table>
+    </section>
 
-      <div id="result" class="mt-4 text-center text-sm font-medium"></div>
-      <div id="records" class="space-y-4 mt-4"></div>
+    <!-- Daftar Records -->
+    <section>
+      <h2>📄 Daftar Record</h2>
+      <table class="custom-table">
+        <thead>
+          <tr><th>Tipe</th><th>Nama</th><th>Konten</th><th>TTL</th><th>Aksi</th></tr>
+        </thead>
+        <tbody id="recordTable">
+          <tr><td colspan="5" class="text-center">Pilih domain untuk melihat record.</td></tr>
+        </tbody>
+      </table>
+    </section>
 
-      <!-- Footer Section -->
-      <footer class="mt-10 text-center text-gray-500 text-sm">
-        <p>&copy; 2025 Yudzxml DNS Manager.</p>
-        <p><a href="/user-guide.html" class="text-indigo-600 hover:text-indigo-800">Panduan Penggunaan</a></p>
-      </footer>
-    </div>
+    <footer>
+      &copy; 2025 Yudzxml DNS Manager. &bull; <a href="/user-guide.html" style="color: var(--color-primary); text-decoration: none;">📘 Panduan Penggunaan</a>
+    </footer>
   </div>
-  <script src="/script.js"></script>
+
+  <script>
+    const API_BASE = 'https://cf-web-phi.vercel.app/api';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadZones();
+      document.getElementById('subdomainInput').addEventListener('input', updateDomain);
+      document.getElementById('zoneSelector').addEventListener('change', () => {
+        updateDomain();
+        viewRecords(document.getElementById('zoneSelector').value);
+      });
+      document.getElementById('dnsForm').addEventListener('submit', submitForm);
+    });
+
+    async function loadZones() {
+      const sel = document.getElementById('zoneSelector');
+      try {
+        const res = await fetch(`${API_BASE}/list-zones`);
+        const { result } = await res.json();
+        sel.innerHTML = result.length
+          ? result.map(z => `<option value="${z.name}">${z.name}</option>`).join('')
+          : '<option disabled>Tidak ada zone</option>';
+        fetchZoneTable(result);
+      } catch {
+        sel.innerHTML = '<option disabled>Error loading zones</option>';
+      }
+    }
+
+    function updateDomain() {
+      const sub = document.getElementById('subdomainInput').value.trim();
+      const zone = document.getElementById('zoneSelector').value;
+      document.getElementById('domain').value = sub ? `${sub}.${zone}` : zone;
+    }
+
+    async function submitForm(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      btn.classList.add('loading'); btn.disabled = true;
+      const body = { domain: document.getElementById('domain').value,
+                     type: document.getElementById('type').value,
+                     content: document.getElementById('content').value,
+                     ttl: parseInt(document.getElementById('ttl').value,10),
+                     proxied: document.getElementById('proxied').checked };
+      const pr = body.type === 'MX' ? parseInt(document.getElementById('priority').value,10) : null;
+      if (body.type === 'MX' && pr) body.priority = pr;
+      try {
+        const res = await fetch(`${API_BASE}/point-domain`, {
+          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+        });
+        const r = await res.json();
+        showResult(r.message, false);
+        viewRecords(body.domain);
+      } catch (err) {
+        showResult('Error submitting form', true);
+      } finally {
+        btn.classList.remove('loading'); btn.disabled = false;
+      }
+    }
+
+    function showResult(msg, isError) {
+      const p = document.getElementById('result');
+      p.textContent = msg;
+      p.style.color = isError ? 'var(--color-error)' : 'var(--color-primary)';
+    }
+
+    function fetchZoneTable(zones) {
+      const table = document.getElementById('domainTable'); table.innerHTML = '';
+      if (!zones.length) {
+        table.innerHTML = '<tr><td colspan="3" class="text-center">Tidak ada domain</td></tr>';
+        return;
+      }
+      zones.forEach(z => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="p-2 border">${z.name}</td>
+          <td class="p-2 border">${z.status}</td>
+          <td class="p-2 border"><button onclick="viewRecords('${z.name}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs">Lihat</button></td>`;
+        table.appendChild(tr);
+      });
+    }
+
+    async function viewRecords(domain) {
+      const res = await fetch(`${API_BASE}/list-records`, {
+        method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({domain})
+      });
+      const { result } = await res.json();
+      const table = document.getElementById('recordTable'); table.innerHTML = '';
+      if (!result || !result.length) {
+        table.innerHTML = '<tr><td colspan="5" class="text-center">Tidak ada record ditemukan</td></tr>';
+        return;
+      }
+      result.forEach(rec => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="p-2 border">${rec.type}</td>
+          <td class="p-2 border">${rec.name}</td>
+          <td class="p-2 border">${rec.content}</td>
+          <td class="p-2 border">${rec.ttl}</td>
+          <td class="p-2 border"><button onclick="deleteRecord('${rec.name}','${rec.type}')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs">Hapus</button></td>`;
+        table.appendChild(tr);
+      });
+    }
+
+    async function deleteRecord(domain, type) {
+      if (!confirm(`Yakin hapus ${type} record untuk ${domain}?`)) return;
+      try {
+        const res = await fetch(`${API_BASE}/delete-record`, {
+          method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ domain, type })
+        });
+        const r = await res.json();
+        alert(r.message);
+        viewRecords(domain);
+      } catch {
+        alert('Error deleting record');
+      }
+    }
+  </script>
 </body>
 </html>
